@@ -1,0 +1,14 @@
+# filepath: c:\Users\sahil\OneDrive\Desktop\sgp\SGP_LLM_2025\docker-compose.yml
+version: '3.8'
+
+services:
+  sgp_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - GOOGLE_API_KEY=${AIzaSyAFY XD65A9PCfy03aQZs5lokCBCDCQ30j8} # Pass the API key from your environment
+    volumes:
+      - .:/app
