@@ -9,6 +9,6 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - GOOGLE_API_KEY=${AIzaSyAFY XD65A9PCfy03aQZs5lokCBCDCQ30j8} # Pass the API key from your environment
+      - GOOGLE_API_KEY=${AIzaSyDi6xnfrLXsQfvEKZUGnPo9W9otrClzjrI} # Pass the API key from your environment
     volumes:
       - .:/app
