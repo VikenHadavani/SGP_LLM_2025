@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
 import os
 import google.generativeai as genai
 from PIL import Image
@@ -23,11 +24,22 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+# Initialize Flask-Migrate
+migrate = Migrate(app, db)
+
 # User model for database
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False) # Add account creation timestamp
+
+class History(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Link to the User model
+    input_text = db.Column(db.String(255), nullable=True)  # User's input text
+    image_url = db.Column(db.String(255), nullable=True)  # Path to the uploaded image
+    response = db.Column(db.Text, nullable=True)  # AI-generated response
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())  # Timestamp of the interaction
 
 # Create the database
 with app.app_context():
@@ -76,6 +88,16 @@ def index():
             image_data = image_file.read()  # Read image as bytes
             response_text = get_gemini_response(input_text, image_data)
             uploaded_image_url = "data:image/jpeg;base64," + str(base64.b64encode(image_data).decode())  # Create base64 URL for display
+            # Save the interaction to the History table
+            if 'user_id' in session:
+                history_entry = History(
+                    user_id=session['user_id'],
+                    input_text=input_text,
+                    image_url=uploaded_image_url,
+                    response=response_text
+                )
+                db.session.add(history_entry)
+                db.session.commit()
         else:
             response_text = "Please upload an image."
 
@@ -146,6 +168,48 @@ def profile():
 
     return render_template('profile.html', user=user)
 
+@app.route('/history', methods=['GET'])
+def history():
+    if 'user_id' not in session:
+        # Redirect to login if the user is not logged in
+        return redirect(url_for('login'))
+
+    query = History.query.filter_by(user_id=session['user_id'])
+
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    keyword = request.args.get('keyword')
+
+    if start_date:
+        query = query.filter(History.timestamp >= start_date)
+    if end_date:
+        query = query.filter(History.timestamp <= end_date)
+    if keyword:
+        query = query.filter(History.input_text.contains(keyword) | History.response.contains(keyword))
+        
+    # Fetch the user's history from the database
+    page = request.args.get('page', 1, type=int)
+    per_page = 5  # Number of entries per page
+    user_history = History.query.filter_by(user_id=session['user_id']).order_by(History.timestamp.desc()).all()
+
+    return render_template('history.html', history=user_history)
+
+@app.route('/history/download', methods=['GET'])
+def download_history():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user_history = History.query.filter_by(user_id=session['user_id']).order_by(History.timestamp.desc()).all()
+
+    def generate():
+        data = [['Timestamp', 'Input Text', 'Image URL', 'Response']]
+        for entry in user_history:
+            data.append([entry.timestamp, entry.input_text, entry.image_url, entry.response])
+        for row in data:
+            yield ','.join(str(item) for item in row) + '\n'
+
+    return Response(generate(), mimetype='text/csv', headers={"Content-Disposition": "attachment;filename=history.csv"})
+
 # Route: Logout
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -154,6 +218,6 @@ def logout():
 
 # Run the app
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # This will recreate the database
     app.run(debug=True)
+    
+    
