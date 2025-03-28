@@ -20,10 +20,10 @@
             </div>
         </div>
         <div class="header-actions">
-            <button class="login-btn" id="login-btn">
+            <a href="/login" class="login-btn">
                 <i class="fas fa-user"></i>
                 Login
-            </button>
+            </a>
         </div>
     </header>
 
@@ -33,9 +33,11 @@
             <img src="{{ url_for('static', filename='img/avatar.png') }}" alt="User Avatar" class="avatar">
             <h3 class="user-name">Guest User</h3>
             <p class="user-email">guest@example.com</p>
-            <button class="login-btn sidebar-login-btn" id="sidebar-login-btn">
-                <i class="fas fa-sign-in-alt"></i>
-                Sign In
+            <button class="signup-btn sidebar-signup-btn" id="sidebar-signup-btn">
+                <a href="/signup">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign Up
+                </a>
             </button>
         </div>
         <nav class="sidebar-menu">
