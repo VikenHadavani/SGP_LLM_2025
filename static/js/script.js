@@ -91,3 +91,46 @@ analysisForm.addEventListener('submit', (event) => {
         showToast('Image analysis submitted successfully!');
     }, 2000); // Simulate a 2-second delay
 });
+
+// Handle login
+document.getElementById('confirm-login').addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Login successful');
+            location.reload();  // Reload the page
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+// Handle signup
+document.getElementById('signup-btn').addEventListener('click', () => {
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+
+    fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Signup successful');
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
