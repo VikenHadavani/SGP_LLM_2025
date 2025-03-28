@@ -1,52 +1,72 @@
-# Q&A Chatbot
-#from langchain.llms import OpenAI
-
+from flask import Flask, render_template, request
 from dotenv import load_dotenv
+import os
+import google.generativeai as genai
+from PIL import Image
+import io
+
+app = Flask(__name__, static_folder='static', template_folder='templates')
 
 load_dotenv()  # take environment variables from .env.
 
-import streamlit as st
-import os
-import pathlib
-import textwrap
-from PIL import Image
-
-
-import google.generativeai as genai
-
-
-os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-## Function to load OpenAI model and get respones
 
-def get_gemini_response(input,image):
-    model = genai.GenerativeModel('gemini-2.0-flash')
-    if input!="":
-       response = model.generate_content([input,image])
+def get_gemini_response(input_text, image_data):
+    """
+    Generates a response from the Gemini model based on the input text and image data.
+
+    Args:
+        input_text: The text prompt.
+        image_data: The image data (bytes).  Can be None.
+
+    Returns:
+        The response text from the Gemini model.
+    """
+
+    model = genai.GenerativeModel('gemini-2.0-flash')  # Use gemini-2.0-flash for images!
+    if image_data:
+        try:
+            image = Image.open(io.BytesIO(image_data))  # Open image from bytes
+        except Exception as e:
+            print(f"Error opening image: {e}")
+            return "Error processing the image."
+
+
+        if input_text:
+            response = model.generate_content([input_text, image])
+        else:
+            response = model.generate_content(image)  # Only the image
     else:
-       response = model.generate_content(image)
+        # Handle the case where no image is provided. If you want the non-vision model, then this is the place
+        # Otherwise, return an error
+        return "Please upload an image."
+
+
     return response.text
 
-##initialize our streamlit app
-
-st.set_page_config(page_title="Gemini Image Demo")
-
-st.header("Food Image to Text ")
-input=st.text_input("Input Prompt: ",key="input")
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-image=""   
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image.", use_container_width=True)
 
 
-submit=st.button("Tell me about the image")
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    response_text = ""
+    uploaded_image_url = None  # For displaying the uploaded image
 
-## If ask button is clicked
+    if request.method == 'POST':
+        input_text = request.form['input_text']
+        image_file = request.files['image']
 
-if submit:
-    
-    response=get_gemini_response(input,image)
-    st.subheader("The Response is")
-    st.write(response)
+        if image_file:
+            image_data = image_file.read()  # Read image as bytes
+            response_text = get_gemini_response(input_text, image_data)
+            uploaded_image_url = "data:image/jpeg;base64," + str(base64.b64encode(image_data).decode())  # Create base64 URL for display
+        else:
+            response_text = "Please upload an image."  # Or handle the case differently
+
+    return render_template('index.html', response=response_text, image_url=uploaded_image_url)
+
+
+import base64  # Import for base64 encoding
+
+if __name__ == '__main__':
+    app.run(debug=True)
