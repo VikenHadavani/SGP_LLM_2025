@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImageInsight AI: Multimodal Image Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="left-section">
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-brain logo-icon"></i>
+                <span class="logo-text">ImageInsight AI</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="login-btn" id="login-btn">
+                <i class="fas fa-user"></i>
+                Login
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="user-profile">
+            <img src="{{ url_for('static', filename='img/avatar.png') }}" alt="User Avatar" class="avatar">
+            <h3 class="user-name">Guest User</h3>
+            <p class="user-email">guest@example.com</p>
+            <button class="login-btn sidebar-login-btn" id="sidebar-login-btn">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item active">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-user-circle"></i>
+                Profile
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-history"></i>
+                History
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-cog"></i>
+                Settings
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-question-circle"></i>
+                Help & Support
+            </a>
+        </nav>
+        <button class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+        <div class="container">
+            <div class="header">
+                <h1>ImageInsight AI: Multimodal Image Analysis</h1>
+                <p class="subtitle">Upload an image and get AI-powered insights</p>
+            </div>
+
+            <div class="card">
+                <form method="POST" enctype="multipart/form-data" id="analysis-form">
+                    <div class="form-group">
+                        <label for="input_text">What would you like to know about the image?</label>
+                        <input type="text" id="input_text" name="input_text" placeholder="E.g., Describe this image in detail">
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="file-upload-container" id="file-upload-container">
+                            <input type="file" id="image" name="image" accept="image/*" class="file-input">
+                            <label for="image" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span class="upload-text">Choose an image or drag it here</span>
+                                <span class="filename" id="filename">No file chosen</span>
+                            </label>
+                        </div>
+                        <div class="image-preview-container" id="image-preview-container">
+                            <img id="image-preview" src="#" alt="Preview">
+                            <button type="button" class="remove-image" id="remove-image">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submit-btn">
+                        <span class="loading-spinner" id="loading-spinner"></span>
+                        <span>Analyze Image</span>
+                    </button>
+                </form>
+            </div>
+
+            {% if image_url %}
+            <div class="results">
+                <div class="image-container">
+                    <h2>Uploaded Image</h2>
+                    <div class="image-wrapper">
+                        <img src="{{ image_url }}" alt="Uploaded Image">
+                    </div>
+                </div>
+                
+                {% if response %}
+                <div class="response-container">
+                    <h2>ImageInsight's Analysis</h2>
+                    <div class="response-content">
+                        <p>{{ response }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <footer>
+                <p>Advanced AI for Visual Intelligence &copy; 2025 ImageInsight</p>
+            </footer>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Login to ImageInsight</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancel-login">Cancel</button>
+                <button class="modal-btn primary" id="confirm-login">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <span id="toast-message">This is a notification</span>
+        <button class="toast-close" id="toast-close">&times;</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
