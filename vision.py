@@ -27,7 +27,7 @@ bcrypt = Bcrypt(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
+    password = db.Column(db.String(120), nullable=False) # Add account creation timestamp
 
 # Create the database
 with app.app_context():
@@ -79,7 +79,7 @@ def index():
         else:
             response_text = "Please upload an image."
 
-    return render_template('index.html', response=response_text, image_url=uploaded_image_url)
+    return render_template('index.html', response=response_text, image_url=uploaded_image_url, session=session)
 
 # Route: Signup
 @app.route('/signup', methods=['GET', 'POST'])
@@ -110,25 +110,50 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
+        print(f"Attempting login for email: {email}")
+
         # Check if the user exists
         user = User.query.filter_by(email=email).first()
-        if not user or not bcrypt.check_password_hash(user.password, password):
-            return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
+        if not user:
+            print("User not found")
+            return render_template('login.html', error="Invalid email or password")
+
+        if not bcrypt.check_password_hash(user.password, password):
+            print("Incorrect password")
+            return render_template('login.html', error="Invalid email or password")
 
         # Log the user in (store in session)
         session['user_id'] = user.id
         session['email'] = user.email
+        print(f"User {email} logged in successfully")
 
-        return jsonify({'success': True, 'message': 'Login successful'})
+        # Redirect to the main page
+        return redirect(url_for('index'))
 
     return render_template('login.html')
+
+# Route: Profile
+@app.route('/profile', methods=['GET'])
+def profile():
+    if 'user_id' not in session:
+        # Redirect to login if the user is not logged in
+        return redirect(url_for('login'))
+
+    # Fetch user details from the database
+    user = User.query.filter_by(id=session['user_id']).first()
+    if not user:
+        return redirect(url_for('logout'))  # Log out if the user is not found
+
+    return render_template('profile.html', user=user)
 
 # Route: Logout
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
-    return jsonify({'success': True, 'message': 'Logged out successfully'})
+    return redirect(url_for('index'))
 
 # Run the app
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # This will recreate the database
     app.run(debug=True)

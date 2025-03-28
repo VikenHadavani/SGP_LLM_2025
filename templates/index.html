@@ -31,6 +31,10 @@
     <aside class="sidebar" id="sidebar">
         <div class="user-profile">
             <img src="{{ url_for('static', filename='img/avatar.png') }}" alt="User Avatar" class="avatar">
+            {% if session['email'] %}
+                <h3 class="user-name">Logged in as:</h3>
+                <p class="user-email">{{ session['email'] }}</p>
+            {% else %}
             <h3 class="user-name">Guest User</h3>
             <p class="user-email">guest@example.com</p>
             <button class="signup-btn sidebar-signup-btn" id="sidebar-signup-btn">
@@ -39,13 +43,14 @@
                     Sign Up
                 </a>
             </button>
+            {% endif %}
         </div>
         <nav class="sidebar-menu">
             <a href="#" class="menu-item active">
                 <i class="fas fa-home"></i>
                 Dashboard
             </a>
-            <a href="#" class="menu-item">
+            <a href="/profile" class="menu-item">
                 <i class="fas fa-user-circle"></i>
                 Profile
             </a>
@@ -62,10 +67,14 @@
                 Help & Support
             </a>
         </nav>
-        <button class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i>
-            Logout
-        </button>
+        {% if session['email'] %}
+            <form method="POST" action="/logout">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </form>
+        {% endif %}
     </aside>
 
     <!-- Main Content -->
