@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
+from flask import Response
 import os
 import google.generativeai as genai
 from PIL import Image
@@ -168,6 +169,7 @@ def profile():
 
     return render_template('profile.html', user=user)
 
+# Route: history
 @app.route('/history', methods=['GET'])
 def history():
     if 'user_id' not in session:
@@ -194,6 +196,7 @@ def history():
 
     return render_template('history.html', history=user_history)
 
+# Route: history/download
 @app.route('/history/download', methods=['GET'])
 def download_history():
     if 'user_id' not in session:
@@ -201,14 +204,59 @@ def download_history():
 
     user_history = History.query.filter_by(user_id=session['user_id']).order_by(History.timestamp.desc()).all()
 
+    # Generate CSV content
     def generate():
         data = [['Timestamp', 'Input Text', 'Image URL', 'Response']]
         for entry in user_history:
-            data.append([entry.timestamp, entry.input_text, entry.image_url, entry.response])
+            data.append([
+                entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') if entry.timestamp else "N/A",
+                entry.input_text or "N/A",
+                entry.image_url or "N/A",
+                entry.response or "N/A"
+            ])
         for row in data:
-            yield ','.join(str(item) for item in row) + '\n'
+            yield ','.join(f'"{item}"' for item in row) + '\n'
 
     return Response(generate(), mimetype='text/csv', headers={"Content-Disposition": "attachment;filename=history.csv"})
+
+#Route: Settings
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(id=session['user_id']).first()
+
+    if request.method == 'POST':
+        # Update user settings
+        new_email = request.form.get('email')
+        new_password = request.form.get('password')
+
+        if new_email:
+            user.email = new_email
+        if new_password:
+            hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+            user.password = hashed_password
+
+        db.session.commit()
+        return render_template('settings.html', user=user, success="Settings updated successfully!")
+
+    return render_template('settings.html', user=user)
+
+#Route: Help & Support
+@app.route('/help', methods=['GET', 'POST'])
+def help():
+    if request.method == 'POST':
+        # Handle support ticket submission
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+
+        # For now, just print the message (you can integrate email or database storage)
+        print(f"Support Ticket from {name} ({email}): {message}")
+        return render_template('help.html', success="Your message has been sent successfully!")
+
+    return render_template('help.html')
 
 # Route: Logout
 @app.route('/logout', methods=['POST'])

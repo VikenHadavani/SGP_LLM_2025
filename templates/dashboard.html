@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ImageInsight AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ session['email'] }}!</p>
+        <p><strong>Total Images Analyzed:</strong> {{ history_count }}</p>
+
+        <h2>Recent History</h2>
+        {% if recent_history %}
+            <ul>
+                {% for entry in recent_history %}
+                    <li>
+                        <strong>{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</strong>: {{ entry.input_text or "No input text" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No recent history available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
