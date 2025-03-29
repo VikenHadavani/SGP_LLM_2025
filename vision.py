@@ -20,7 +20,6 @@ app.secret_key = os.getenv('SECRET_KEY')  # Replace with a secure key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'  # SQLite database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
 # Initialize database and bcrypt
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -266,6 +265,6 @@ def logout():
 
 # Run the app
 if __name__ == '__main__':
-    app.run(ssl_context=('server.cert', 'server.key'), debug=True)
+    app.run(debug=True)
     
     
