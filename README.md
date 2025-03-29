@@ -1,135 +1,152 @@
-# 🖼️ ImageInsight AI: Multimodal Image Analysis
+# 🖼️ ImageInsight AI: Multimodal Image Analysis  
 
-## 🔬 Advanced AI for Visual Intelligence
+## 🔬 Advanced AI for Visual Intelligence  
 
-This enterprise-grade application harnesses Google's Gemini foundation models to create a sophisticated image analysis ecosystem. Our multidisciplinary team commenced development on **February 11, 2024**, focusing on building a production-ready system that extracts rich semantic information from imagery through advanced multimodal AI techniques.
+**ImageInsight AI** is an enterprise-grade application leveraging **Google's Gemini foundation models** to provide sophisticated image analysis and insights. Development began on **February 11, 2024**, with the goal of building a **production-ready system** that extracts rich semantic information from images using **advanced multimodal AI techniques**.  
 
-### 👥 Research & Development Team:
-- Viken Hadavani
-- Dhruv Singala
-- Karan Thakkar
+This project enhances user interaction with images and generates **meaningful insights** through **artificial intelligence**.  
 
-## 📊 System Architecture Overview
+---
 
-We've engineered three interconnected Streamlit-based microservices that leverage different capabilities of Google's Gemini models:
+## 👥 Research & Development Team  
 
-1. **ImageAnalyzer Core**: Our flagship multimodal application optimized for image analysis, capable of extracting detailed information from visual imagery with high precision.
+- **Viken Hadavat** – **Team Lead  & ML Engineer**, responsible for project management and architectural design.  
+- **Dhruv Singala** – **Lead Developer**, focused on backend development and database management.  
+- **Karan Thakkar** – **Software tester & Researcher**, specializing in software testing and research.  
 
-2. **VisualQA Engine**: A sophisticated knowledge retrieval interface for domain-specific information about objects, scenes, and visual elements within images.
+---
 
-3. **Contextual Dialogue System**: A stateful conversation manager that maintains semantic context through session persistence, enabling complex multi-turn interactions about visual content.
+## 📊 System Architecture Overview  
 
-## 🔍 Technical Capabilities
+The **ImageInsight AI** application is built on a **modular architecture**, consisting of several interconnected components:  
 
-### ImageAnalyzer Core (Image Analysis Module)
-- **Object Recognition**: Identifies diverse objects within images with high accuracy
-- **Scene Understanding**: Performs hierarchical analysis of visual environments and contexts
-- **Attribute Extraction**: Identifies and describes key attributes of objects and scenes
-- **Caption Generation**: Generates descriptive captions summarizing image content
-- **Spatial Relationship Analysis**: Identifies positioning and relationships between objects
-- **Text Detection**: Identifies and extracts text present within images
-- **Landmark Recognition**: Identifies famous landmarks and locations
-- **Multi-format Input Processing**: Supports standard image formats (jpg, jpeg, png)
-- **Query-guided Analysis**: Accepts natural language directives to focus analysis
+### 1️⃣ Database Migration  
+- **Technology Used:** Alembic  
+- **Purpose:**  
+  - Facilitates **schema changes** in the database for smooth updates and enhancements.  
+  - Implements **email verification fields** (`verified` and `verification_token`) to improve user security.  
 
-### VisualQA Engine (Knowledge Retrieval Module)
-- Implements the `gemini-2.0-flash` model for low-latency responses
-- Features streaming response architecture for progressive rendering
-- Maintains conversation state for reference resolution
-- Presents a minimalist interface optimized for knowledge retrieval
+### 2️⃣ Flask Application  
+- **Role:**  
+  - Serves as the **backend**, handling user authentication, session management, and image uploads.  
+  - Manages API interactions with the **Gemini model** for image analysis.  
+- **Key Features:**  
+  ✅ User Registration – Secure password hashing & account management.  
+  ✅ Login System – Credential validation & session handling.  
+  ✅ Image Processing – AI-driven image analysis with real-time insights.  
 
-### Contextual Dialogue System (Conversation Management Module)
-- Implements session-level semantic memory for extended conversations
-- Provides comprehensive conversation logging and retrieval
-- Enables natural discourse with anaphora and context carryover
-- Structures interactions with clear participant demarcation
+### 3️⃣ Streamlit Application  
+- **Role:**  
+  - Provides an **interactive user interface** for image uploads and analysis.  
+- **Key Features:**  
+  ✅ **File Upload** – Accepts `jpg, jpeg, png` formats.  
+  ✅ **Analysis Trigger** – Sends images for AI analysis and displays real-time results.  
 
-## ⚙️ Implementation Architecture
+### 4️⃣ CSS Styles  
+- **Purpose:**  
+  - Defines **visual appearance** and ensures a **responsive** user interface.  
+- **Key Elements:**  
+  ✅ **Responsive Design** – Works across mobile & desktop devices.  
+  ✅ **Component Styling** – Enhances UI/UX with styled buttons, modals, and layouts.  
 
-Our system follows a modern microservices architecture:
+### 5️⃣ JavaScript Functionality  
+- **Role:**  
+  - Enhances UI interactivity & user experience.  
+- **Key Features:**  
+  ✅ **Sidebar Toggle** – Expand/collapse navigation menu.  
+  ✅ **Modal Dialogs** – Manage login/signup popups.  
+  ✅ **File Upload Previews** – Show preview before submission.  
 
-1. **Presentation Layer**: Streamlit-based responsive interfaces for data collection and visualization
-2. **Business Logic Layer**: Python services for request orchestration and response processing
-3. **Integration Layer**: Authenticated connections to Google's Generative AI endpoints
-4. **Response Processing Layer**: Transformation and rendering of model outputs
+### 6️⃣ Docker Configuration  
+- **Purpose:**  
+  - Ensures a **consistent, containerized** environment for deployment.  
+- **Key Elements:**  
+  ✅ **Base Image** – Uses `Python 3.9 slim` for efficiency.  
+  ✅ **Dependency Installation** – Installs required packages (`requirements.txt`).  
+  ✅ **Port Exposure** – Enables **Streamlit** access on specified ports.  
 
-## 🛠️ Technology Stack
+---
 
-- **Python 3.7+**: Core implementation language
-- **Streamlit**: Interactive web application framework
-- **Google Generative AI (Gemini)**: Foundation models for multimodal analysis
-- **dotenv**: Environment configuration management
-- **PIL**: Image preprocessing pipeline
-- **IPython.display**: Rich content rendering
+## 🚀 Deployment Instructions  
 
-## 🚀 Deployment Instructions
+### System Requirements  
+- **Python Version:** `3.7+`  
+- **Google API Key:** Required to access **Gemini Pro** AI model.  
 
-### System Requirements
-- Python 3.7+
-- Google API key with Gemini pro model access
+### Install Dependencies  
+Run the following command:  
 
-### Install dependencies
 
-pip install streamlit python-dotenv google-generativeai pillow ipython
+# 🚀 AI-Powered Image Analysis with Gemini API  
 
-## Configure API authentication:
-- Obtain credentials from Google AI Studio or Google Cloud Console
-- Create a project and enable the Generative AI API
-- Generate and secure an API key
-- Implement appropriate key restrictions
+This project leverages **Google's Gemini AI models** for advanced multimodal image analysis. It enables users to extract **rich semantic insights** from images using state-of-the-art **AI-powered** vision models.  
 
-## Technical Competencies:
+---
 
-- **Foundation Models**: Understanding capabilities and constraints of multimodal AI models
-- **API Integration Patterns**: Implementing secure and efficient external AI service connections
-- **Prompt Engineering**: Systematic approaches to optimal instruction design
-- **Streamlit Application Development**: Building production-ready data applications
-- **Multimodal AI Systems**: Working with heterogeneous data inputs for unified analysis
-- **Security Best Practices**: Implementing proper credential management
-- **Asynchronous Response Handling**: Managing streamed model outputs efficiently
+## 🔑 Configure API Authentication  
 
-## 🚧 Current Limitations & Constraints:
+To use the **Gemini API**, follow these steps to **securely authenticate** your application:  
 
-Our system currently faces several technical and domain-specific limitations:
+### 1️⃣ Obtain API Key  
+Retrieve your API key from either:  
+- **Google AI Studio**  
+- **Google Cloud Console**  
 
-### Domain-Specific Constraints:
+### 2️⃣ Enable Generative AI API  
+- Set up a project in **Google Cloud Console**  
+- Enable the **Generative AI API**  
 
-- **Visual Ambiguity Resolution**: Challenges in disambiguating visually similar objects
-- **Fine-Grained Detail**: Limited capability for fine-grained visual detail extraction
-- **Contextual Understanding**: Difficulty in fully grasping nuanced contextual information
-- **Occluded Object Detection**: Inability to identify components not visible in images
-- **Abstract Concepts**: Limitations in interpreting abstract or symbolic imagery
-- **Novelty Detection**: Struggles with accurately interpreting unseen or rare objects/scenes
+### 3️⃣ Secure API Key  
+To prevent **unauthorized access**, apply the following security measures:  
+✅ **Referrer Restrictions** – Limit API key usage to specific domains.  
+✅ **IP Whitelisting** – Restrict API calls to trusted IP addresses.  
 
-### Technical Limitations:
+---
 
-- **Output Determinism**: Inherent variability in generative model responses
-- **Image Quality Dependencies**: Performance correlation with input image quality
-- **Response Latency Management**: Complexity in handling variable streaming response times
-- **Session State Persistence**: Limitations in Streamlit's state management capabilities
-- **Ephemeral Data Storage**: Session termination results in conversation history loss
+## ⚙️ Technical Competencies  
 
-## Infrastructure Improvements:
+The project demonstrates expertise in:  
 
-- **Persistent Data Architecture**: Implement database integration for conversation history
-- **Authentication System**: Develop user identity management
-- **Responsive Design Optimization**: Enhance cross-device compatibility
-- **Internationalization**: Implement multilingual support
-- **Accessibility Compliance**: Ensure WCAG 2.1 standards compliance
+✅ **Multimodal AI** – Understanding AI capabilities & constraints.  
+✅ **API Integration Patterns** – Secure methods for AI service connections.  
+✅ **Prompt Engineering** – Optimizing prompts for accurate results.  
+✅ **Streamlit Development** – Rapid prototyping for interactive UIs.  
+✅ **Security Best Practices** – Credential management & secure coding.  
 
-## 🙏 Acknowledgements
-We extend our appreciation to:
+---
 
-- Google's AI research team for providing access to the Gemini API
-- Streamlit's development team for their robust application framework
-- Our academic advisors for their technical guidance
-- Visual computing domain experts who provided evaluation feedback
+## 🚧 Current Limitations & Constraints  
 
-## 📚 References & Resources
-- [Streamlit Documentation](https://docs.streamlit.io/)
-- [Google Generative AI Python SDK Documentation](https://developers.google.com/generative-ai/)
-- [Gemini API Technical Documentation](https://cloud.google.com/vertex-ai/docs/generative-ai/)
-- [ImageNet Reference Database](https://www.image-net.org/)
-- [Python dotenv Documentation](https://saurabh-kumar.com/python-dotenv/#documentation)
+### 📌 Domain-Specific Constraints  
+⚠ **Visual Ambiguity** – Struggles with objects that look alike.  
+⚠ **Fine-Grained Detail Extraction** – Limited accuracy for tiny intricate details.  
+⚠ **Contextual Understanding** – May misinterpret complex scenarios.  
 
-# Thank you
+### 📌 Technical Limitations  
+⚠ **Output Variability** – Responses may differ for similar inputs.  
+⚠ **Image Quality Dependencies** – Poor-quality images reduce accuracy.  
+⚠ **Session State Management** – Challenge in maintaining user context over multiple interactions.  
+
+---
+
+## 🙏 Acknowledgements  
+
+We extend our appreciation to:  
+
+💡 **Google’s AI Research Team** – For providing access to the **Gemini API**.  
+💡 **Streamlit Development Team** – For their **interactive framework**.  
+💡 **Academic Advisors** – For **guidance and technical support**.  
+
+---
+
+## 📚 References & Resources  
+
+📖 [Streamlit Documentation](https://docs.streamlit.io/)  
+📖 [Google Generative AI Docs](https://ai.google.dev/)  
+📖 [Gemini API Docs](https://ai.google.dev/docs)  
+📖 [Alembic Docs](https://alembic.sqlalchemy.org/en/latest/)  
+📖 [Flask Docs](https://flask.palletsprojects.com/en/latest/)  
+
+---
+
+🚀 **Stay tuned for future updates!**  
