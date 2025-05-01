@@ -148,7 +148,6 @@ if (savedTheme) {
 
 // Toggle theme on button click
 themeToggle.addEventListener('click', () => {
-    console.log('Theme toggle clicked');
     if (body.classList.contains('dark-theme')) {
         body.classList.remove('dark-theme');
         localStorage.setItem('theme', ''); // Save theme preference
@@ -168,4 +167,3 @@ function updateThemeButtonText(theme) {
         themeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
     }
 }
-

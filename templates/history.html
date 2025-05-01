@@ -7,54 +7,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body style="background:linear-gradient(120deg,#f8f9fa 80%,#e9ecef 100%);">
-    <div class="container card" style="margin-top:2.5rem;box-shadow:0 8px 32px 0 rgba(67,97,238,0.08);padding:2.5rem 2rem;">
-        <h1 style="color:#4361ee;text-shadow:0 2px 24px #e0e0e0;">Your History</h1>
-        <a href="{{ url_for('download_history') }}" class="btn btn-secondary" style="margin-bottom:1.5rem;">Download History as CSV</a>
-        <form method="GET" action="/history" class="filter-form" style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:1rem;margin-bottom:2rem;background:#e9ecef;padding:1.2rem 1rem;border-radius:10px;box-shadow:0 2px 12px #e0e0e0;">
+<body>
+    <div class="container">
+        <h1>Your History</h1>
+        <a href="{{ url_for('download_history') }}" class="btn btn-secondary">Download History as CSV</a>
+        <form method="GET" action="/history" class="filter-form">
             <div class="form-group">
                 <label for="start_date">Start Date:</label>
-                <input type="date" id="start_date" name="start_date" value="{{ request.args.get('start_date', '') }}" aria-label="Start Date">
+                <input type="date" id="start_date" name="start_date" value="{{ request.args.get('start_date', '') }}">
             </div>
             <div class="form-group">
                 <label for="end_date">End Date:</label>
-                <input type="date" id="end_date" name="end_date" value="{{ request.args.get('end_date', '') }}" aria-label="End Date">
+                <input type="date" id="end_date" name="end_date" value="{{ request.args.get('end_date', '') }}">
             </div>
             <div class="form-group">
                 <label for="keyword">Keyword:</label>
-                <input type="text" id="keyword" name="keyword" placeholder="Search keyword" value="{{ request.args.get('keyword', '') }}" aria-label="Keyword">
+                <input type="text" id="keyword" name="keyword" placeholder="Search keyword" value="{{ request.args.get('keyword', '') }}">
             </div>
-            <button type="submit" class="btn btn-primary" aria-label="Filter History">Filter</button>
+            <button type="submit" class="btn btn-primary">Filter</button>
         </form>
         {% if history %}
-        <div class="history-list" style="display:grid;gap:1.5rem;">
-            {% for entry in history %}
-            <div class="history-item card" style="background:#fff;border-radius:10px;box-shadow:0 2px 12px #e0e0e0;padding:1.2rem 1.5rem;">
-                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:1.5rem;">
-                    <span style="color:#48bfe3;font-weight:600;min-width:140px;">{{ entry.timestamp }}</span>
-                    <span style="color:#2b2d42;">{{ entry.input_text }}</span>
-                </div>
-                {% if entry.image_url %}
-                <div style="margin:1rem 0;">
-                    <img src="{{ entry.image_url }}" alt="Uploaded Image" class="history-image" style="max-width:160px;box-shadow:0 4px 32px rgba(67,97,238,0.12);border-radius:10px;transition:transform 0.3s;cursor:zoom-in;" onmouseover="this.style.transform='scale(1.18)'" onmouseout="this.style.transform='scale(1)'" tabindex="0" aria-label="Zoom on hover">
-                </div>
-                {% endif %}
-                <div style="margin-top:0.5rem;color:#7209b7;"><strong>Response:</strong> <span style="color:#2b2d42;">{{ entry.response }}</span></div>
+            <div class="history-list">
+                {% for entry in history %}
+                    <div class="history-item">
+                        <p><strong>Timestamp:</strong> {{ entry.timestamp }}</p>
+                        <p><strong>Input Text:</strong> {{ entry.input_text }}</p>
+                        {% if entry.image_url %}
+                            <p><strong>Uploaded Image:</strong></p>
+                            <img src="{{ entry.image_url }}" alt="Uploaded Image" class="history-image">
+                        {% endif %}
+                        <p><strong>Response:</strong> {{ entry.response }}</p>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-        <div class="pagination" style="margin-top:2rem;">
-            {% if history.has_prev %}
-                <a href="{{ url_for('history', page=history.prev_num) }}" class="btn" aria-label="Previous Page">Previous</a>
-            {% endif %}
-            {% if history.has_next %}
-                <a href="{{ url_for('history', page=history.next_num) }}" class="btn" aria-label="Next Page">Next</a>
-            {% endif %}
-        </div>
+            <div class="pagination">
+                {% if history.has_prev %}
+                    <a href="{{ url_for('history', page=history.prev_num) }}" class="btn">Previous</a>
+                {% endif %}
+                {% if history.has_next %}
+                    <a href="{{ url_for('history', page=history.next_num) }}" class="btn">Next</a>
+                {% endif %}
+            </div>
         {% else %}
-        <p>No history available.</p>
+            <p>No history available.</p>
         {% endif %}
-        <a href="/" class="btn btn-primary" style="margin-top:2rem;">Go Back to Dashboard</a>
+        <a href="/" class="btn btn-primary">Go Back to Dashboard</a>
     </div>
 </body>
 </html>
