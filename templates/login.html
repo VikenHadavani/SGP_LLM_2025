@@ -12,6 +12,9 @@
         <div class="auth-card">
             <h2 class="auth-title">Welcome Back!</h2>
             <p class="auth-subtitle">Log in to access your account</p>
+            {% if error %}
+                <div class="auth-error">{{ error }}</div>
+            {% endif %}
             <form method="POST" action="/login" class="auth-form">
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> Email</label>

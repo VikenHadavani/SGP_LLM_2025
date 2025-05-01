@@ -6,23 +6,28 @@
     <title>Dashboard - ImageInsight AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-    <div class="container">
-        <h1>Dashboard</h1>
-        <p>Welcome back, {{ session['email'] }}!</p>
-        <p><strong>Total Images Analyzed:</strong> {{ history_count }}</p>
-
-        <h2>Recent History</h2>
+<body style="background:linear-gradient(120deg,#f8f9fa 80%,#e9ecef 100%);">
+    <div class="container card" style="margin-top:2.5rem;box-shadow:0 8px 32px 0 rgba(67,97,238,0.08);padding:2.5rem 2rem;">
+        <h1 style="color:#4361ee;text-shadow:0 2px 24px #e0e0e0;">Dashboard</h1>
+        <p style="font-size:1.1rem;">Welcome back, <span style="color:#7209b7;font-weight:600;">{{ session['email'] }}</span>!</p>
+        <div style="margin:1.2rem 0 2rem 0;display:flex;align-items:center;gap:2rem;">
+            <div style="background:#e9ecef;border-radius:10px;padding:1.2rem 2rem;box-shadow:0 2px 12px #e0e0e0;min-width:180px;text-align:center;">
+                <span style="font-size:2.1rem;color:#4361ee;font-weight:700;">{{ history_count }}</span><br>
+                <span style="font-size:1rem;color:#2b2d42;">Total Images Analyzed</span>
+            </div>
+        </div>
+        <h2 style="color:#2b2d42;font-size:1.3rem;margin-bottom:1rem;">Recent History</h2>
         {% if recent_history %}
-            <ul>
-                {% for entry in recent_history %}
-                    <li>
-                        <strong>{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</strong>: {{ entry.input_text or "No input text" }}
-                    </li>
-                {% endfor %}
-            </ul>
+        <div style="display:grid;gap:1.2rem;">
+            {% for entry in recent_history %}
+            <div style="background:#fff;border-radius:8px;box-shadow:0 2px 12px #e0e0e0;padding:1rem 1.2rem;display:flex;align-items:center;gap:1rem;">
+                <span style="color:#48bfe3;font-weight:600;min-width:140px;">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                <span style="color:#2b2d42;">{{ entry.input_text or "No input text" }}</span>
+            </div>
+            {% endfor %}
+        </div>
         {% else %}
-            <p>No recent history available.</p>
+        <p>No recent history available.</p>
         {% endif %}
     </div>
 </body>
