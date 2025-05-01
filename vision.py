@@ -16,10 +16,9 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='static', template_folder='templates')
-app.secret_key = os.getenv('SECRET_KEY')  # Replace with a secure key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'  # SQLite database
+app.secret_key = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 
 # Initialize database and bcrypt
 db = SQLAlchemy(app)
@@ -32,15 +31,15 @@ migrate = Migrate(app, db)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False) # Add account creation timestamp
+    password = db.Column(db.String(120), nullable=False)
 
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Link to the User model
-    input_text = db.Column(db.String(255), nullable=True)  # User's input text
-    image_url = db.Column(db.String(255), nullable=True)  # Path to the uploaded image
-    response = db.Column(db.Text, nullable=True)  # AI-generated response
-    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())  # Timestamp of the interaction
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    input_text = db.Column(db.String(255), nullable=True)
+    image_url = db.Column(db.String(255), nullable=True)
+    response = db.Column(db.Text, nullable=True)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 # Create the database
 with app.app_context():
@@ -61,7 +60,7 @@ def get_gemini_response(input_text, image_data):
     model = genai.GenerativeModel('gemini-2.0-flash')  # Use gemini-2.0-flash for images!
     if image_data:
         try:
-            image = Image.open(io.BytesIO(image_data))  # Open image from bytes
+            image = Image.open(io.BytesIO(image_data)) 
         except Exception as e:
             print(f"Error opening image: {e}")
             return "Error processing the image."
@@ -69,7 +68,7 @@ def get_gemini_response(input_text, image_data):
         if input_text:
             response = model.generate_content([input_text, image])
         else:
-            response = model.generate_content(image)  # Only the image
+            response = model.generate_content(image) 
     else:
         return "Please upload an image."
 
@@ -79,14 +78,14 @@ def get_gemini_response(input_text, image_data):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     response_text = ""
-    uploaded_image_url = None  # For displaying the uploaded image
+    uploaded_image_url = None
 
     if request.method == 'POST':
         input_text = request.form['input_text']
         image_file = request.files['image']
 
         if image_file:
-            image_data = image_file.read()  # Read image as bytes
+            image_data = image_file.read()
             response_text = get_gemini_response(input_text, image_data)
             uploaded_image_url = "data:image/jpeg;base64," + str(base64.b64encode(image_data).decode())  # Create base64 URL for display
             # Save the interaction to the History table
@@ -165,7 +164,7 @@ def profile():
     # Fetch user details from the database
     user = User.query.filter_by(id=session['user_id']).first()
     if not user:
-        return redirect(url_for('logout'))  # Log out if the user is not found
+        return redirect(url_for('logout'))
 
     return render_template('profile.html', user=user)
 
@@ -191,7 +190,7 @@ def history():
         
     # Fetch the user's history from the database
     page = request.args.get('page', 1, type=int)
-    per_page = 5  # Number of entries per page
+    per_page = 5  
     user_history = History.query.filter_by(user_id=session['user_id']).order_by(History.timestamp.desc()).all()
 
     return render_template('history.html', history=user_history)
